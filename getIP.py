@@ -6,8 +6,13 @@ import subprocess
 logFail = "getFailedLog"
 file_to_check = "test1"
 output_file= "ips.txt"
+saved_ip= "ips.txt"
+with open(saved_ip, "r") as file:
+    lines = set(line.strip() for line in file) if file.readable() else set()
+
+
 # Open the output file in write mode to overwrite the previous contents
-with open(output_file, "w") as output_file_obj:
+with open(output_file, "a") as output_file_obj:
     # Open the input file in read mode
     with open(file_to_check, "r") as input_file:
         current_ip = None
@@ -28,9 +33,10 @@ with open(output_file, "w") as output_file_obj:
 
                 # Check if we have three or more consecutive lines with the same IP
                 if consecutive_count >= 3:
-                    
+                    if ip not in lines:
                     # Write the matched IP to the output file
-                    output_file_obj.write(ip + "\n")
+                        output_file_obj.write(ip + "\n")
+                        lines.add(ip + "\n")
 
                     # Reset the consecutive count to start from the first different IP
                     while True:
